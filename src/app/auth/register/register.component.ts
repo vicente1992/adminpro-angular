@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 //Servicios
 import { UsuarioService } from '../../services/usuario.service';
 import { MessageService } from '../../services/message.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -16,7 +17,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private usuarioService: UsuarioService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -41,8 +43,8 @@ export class RegisterComponent implements OnInit {
     }
     //Crear usuarios
     this.usuarioService.crearUsurio(this.registerForm.value).subscribe(res => {
-      console.log('Usuario creado');
-      console.log(res);
+      //Navegar  al dashboard
+      this.router.navigateByUrl('/');
     }, (err) => this.messageService.mensajeError('Error', err.error.message));
   }
   campoNoValido(campo: string): boolean {

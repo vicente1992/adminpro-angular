@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'src/app/services/message.service';
@@ -17,7 +17,8 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private usuarioService: UsuarioService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private ngZone: NgZone
   ) { }
 
   ngOnInit(): void {
@@ -43,9 +44,11 @@ export class LoginComponent implements OnInit {
       } else {
         localStorage.removeItem('email');
       }
-      console.log(res);
+      //Navegar  al dashboard
+      this.router.navigateByUrl('/');
+
     }, (err) => this.messageService.mensajeError('Error', err.error.message))
-    //this.router.navigateByUrl('/');
+
   }
 
 
@@ -61,21 +64,24 @@ export class LoginComponent implements OnInit {
     this.startApp();
   }
 
-  startApp() {
-    gapi.load('auth2', () => {
-      this.auth2 = gapi.auth2.init({
-        client_id: '175175578651-549sdtsd8glg6c6lu33oslg40o97hn92.apps.googleusercontent.com',
-        cookiepolicy: 'single_host_origin',
-      });
-      this.attachSignin(document.getElementById('my-signin2'));
-    });
+  async startApp() {
+    await this.usuarioService.googleInit();
+    this.auth2 = this.usuarioService.auth2;
+    this.attachSignin(document.getElementById('my-signin2'));
+
   };
   attachSignin(element) {
     this.auth2.attachClickHandler(element, {},
       (googleUser) => {
         const id_token = googleUser.getAuthResponse().id_token;
-        console.log(id_token);
-        this.usuarioService.loginGoogle(id_token).subscribe();
+        this.usuarioService.loginGoogle(id_token).subscribe(resp => {
+          //Navegar  al dashboard
+          this.ngZone.run(() => {
+            this.router.navigateByUrl('/');
+
+          })
+        });
+
       }, (error) => {
         alert(JSON.stringify(error, undefined, 2));
       });

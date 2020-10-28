@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 //interface
 import { RegisterForm } from '../interfaces/register-form.interface';
 import { LoginForm } from '../interfaces/login-form.interface';
+import { CargarUsuario } from '../interfaces/cargar-usuarios.interface';
 
 //Models
 import { Usuario } from '../models/usuario.model';
@@ -35,7 +36,13 @@ export class UsuarioService {
   get uid(): string {
     return this.usuario.uid || '';
   }
-
+  get headers() {
+    return {
+      headers: {
+        'x-token': this.token
+      }
+    }
+  }
   googleInit() {
 
     return new Promise(resolve => {
@@ -122,6 +129,24 @@ export class UsuarioService {
       .pipe(tap((resp: any) => {
         localStorage.setItem('token', resp.token);
       })
+      );
+  }
+
+  cargarUsuarios(desde: number = 0) {
+    //http://localhost:3000/api/v1/usuarios?desde=5
+    const url = `${this.base_url}/usuarios?desde=${desde}`;
+    return this.httClient.get<CargarUsuario>(url, this.headers)
+      .pipe(
+        map(resp => {
+          const usuarios = resp.usuarios.map(
+            user =>
+              new Usuario(user.nombre, user.email, '', user.img, user.google, user.role, user.uid)
+          );
+          return {
+            total: resp.total,
+            usuarios
+          }
+        })
       );
   }
 }

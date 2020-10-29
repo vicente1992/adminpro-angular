@@ -111,11 +111,7 @@ export class UsuarioService {
       ...data,
       role: this.usuario.role
     }
-    return this.httClient.put(`${this.base_url}/usuarios/${this.uid}`, data, {
-      headers: {
-        'x-token': this.token
-      }
-    });
+    return this.httClient.put(`${this.base_url}/usuarios/${this.uid}`, data, this.headers);
   }
   login(formData: LoginForm) {
     return this.httClient.post(`${this.base_url}/login`, formData)
@@ -148,5 +144,15 @@ export class UsuarioService {
           }
         })
       );
+  }
+
+  eliminarUsuario(usuario: Usuario) {
+    const url = `${this.base_url}/usuarios/${usuario.uid}`;
+    return this.httClient.delete(url, this.headers)
+  }
+
+
+  cambiarRole(usuario: Usuario) {
+    return this.httClient.put(`${this.base_url}/usuarios/${usuario.uid}`, usuario, this.headers);
   }
 }

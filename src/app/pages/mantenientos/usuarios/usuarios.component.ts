@@ -37,7 +37,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   }
   ngOnInit(): void {
     this.getUsuarios();
-    this.modalImagenSevice.nuevaImagen
+    this.imgSubs = this.imgSubs = this.modalImagenSevice.nuevaImagen
       .pipe(delay(100)).subscribe(img => this.getUsuarios());
   }
 
@@ -60,7 +60,6 @@ export class UsuariosComponent implements OnInit, OnDestroy {
       this.paginaDesde -= valor;
     }
     this.getUsuarios();
-
   }
 
 
@@ -69,14 +68,12 @@ export class UsuariosComponent implements OnInit, OnDestroy {
       return this.usuarios = this.usuariosTemp;
     }
     this.busquedasService.buscar('usuarios', termino)
-      .subscribe(usuarios => {
+      .subscribe((usuarios: Usuario[]) => {
         this.usuarios = usuarios;
-
       })
   }
 
   eliminar(usuario: Usuario) {
-
     if (usuario.uid = this.usuarioService.uid) {
       return this.messageService.mensajeError('Error', 'El usuario no puede borrarse a si mismo');
     }
@@ -101,7 +98,6 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   cambiarRole(usuario: Usuario) {
     this.usuarioService.cambiarRole(usuario)
       .subscribe(resp => {
-        console.log(resp);
       })
   }
 

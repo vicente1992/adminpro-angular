@@ -1,9 +1,10 @@
+
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-
+import { PipeModule } from './../pipes/pipe.module';
 
 import { SharedModule } from '../shared/shared.module';
 import { ComponentsModule } from '../components/components.module';
@@ -18,7 +19,9 @@ import { PromesasComponent } from './promesas/promesas.component';
 import { RxjsComponent } from './rxjs/rxjs.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { UsuariosComponent } from './mantenientos/usuarios/usuarios.component';
-
+import { HospitalesComponent } from './mantenientos/hospitales/hospitales.component';
+import { MedicosComponent } from './mantenientos/medicos/medicos.component';
+import { MedicoComponent } from './mantenientos/medicos/medico/medico.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +34,9 @@ import { UsuariosComponent } from './mantenientos/usuarios/usuarios.component';
     RxjsComponent,
     PerfilComponent,
     UsuariosComponent,
+    HospitalesComponent,
+    MedicosComponent,
+    MedicoComponent
   ],
   exports: [
     DashboardComponent,
@@ -46,6 +52,8 @@ import { UsuariosComponent } from './mantenientos/usuarios/usuarios.component';
     SharedModule,
     RouterModule,
     ComponentsModule,
+    PipeModule,
+
 
   ]
 })

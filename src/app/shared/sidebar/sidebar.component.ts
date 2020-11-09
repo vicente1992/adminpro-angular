@@ -8,14 +8,14 @@ import { SidebarService } from '../../services/sidebar.service';
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
-  menuItem: any[];
+
   public usuario: Usuario;
   constructor(
-    private sidebarService: SidebarService,
+    public sidebarService: SidebarService,
     private usuarioService: UsuarioService
 
   ) {
-    this.menuItem = this.sidebarService.menu;
+
     this.usuario = this.usuarioService.usuario;
   }
 

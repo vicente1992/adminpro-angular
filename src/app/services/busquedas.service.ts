@@ -24,6 +24,10 @@ export class BusquedasService {
       }
     }
   }
+  busquedaGlobal(termino: string) {
+    const url = `${this.base_url}/todo/${termino}`;
+    return this.httClient.get(url, this.headers)
+  }
   private transformarUsuarios(resultados: any[]): Usuario[] {
     return resultados.map(
       user => new Usuario(user.nombre, user.email, '', user.img, user.google, user.role, user.uid)

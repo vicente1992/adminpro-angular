@@ -36,6 +36,10 @@ export class UsuarioService {
   get uid(): string {
     return this.usuario.uid || '';
   }
+
+  get role(): 'USER_ROLE' | 'ADMIN_ROLE' {
+    return this.usuario.role;
+  }
   get headers() {
     return {
       headers: {
@@ -46,7 +50,6 @@ export class UsuarioService {
   googleInit() {
 
     return new Promise(resolve => {
-      console.log('google init');
       gapi.load('auth2', () => {
         this.auth2 = gapi.auth2.init({
           client_id: '175175578651-549sdtsd8glg6c6lu33oslg40o97hn92.apps.googleusercontent.com',
@@ -59,6 +62,7 @@ export class UsuarioService {
   }
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('menu');
 
     this.auth2.signOut().then(() => {
       this.ngZone.run(() => {
@@ -67,6 +71,10 @@ export class UsuarioService {
     });
   }
 
+  guardarLocalStorage(token: string, menu: any) {
+    localStorage.setItem('token', token);
+    localStorage.setItem('menu', JSON.stringify(menu));
+  }
   validarToken(): Observable<boolean> {
 
     return this.httClient.get(`${this.base_url}/login/renew`, {
@@ -91,7 +99,7 @@ export class UsuarioService {
         role,
         uid,
       );
-      localStorage.setItem('token', resp.token);
+      this.guardarLocalStorage(resp.token, resp.menu);
       return true;
     }),
       catchError(error => of(false))
@@ -101,7 +109,7 @@ export class UsuarioService {
   crearUsurio(formData: RegisterForm) {
     return this.httClient.post(`${this.base_url}/usuarios`, formData)
       .pipe(tap((resp: any) => {
-        localStorage.setItem('token', resp.token);
+        this.guardarLocalStorage(resp.token, resp.menu);
       })
       );
   }
@@ -116,14 +124,14 @@ export class UsuarioService {
   login(formData: LoginForm) {
     return this.httClient.post(`${this.base_url}/login`, formData)
       .pipe(tap((resp: any) => {
-        localStorage.setItem('token', resp.token);
+        this.guardarLocalStorage(resp.token, resp.menu);
       })
       );
   }
   loginGoogle(token) {
     return this.httClient.post(`${this.base_url}/login/google`, { token })
       .pipe(tap((resp: any) => {
-        localStorage.setItem('token', resp.token);
+        this.guardarLocalStorage(resp.token, resp.menu);
       })
       );
   }
